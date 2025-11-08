@@ -117,10 +117,10 @@ const ProfileGallery = () => {
           onClick={() => setSelectedProfile(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in duration-200"
+            className="bg-white rounded-3xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl animate-in zoom-in duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-64 bg-gradient-to-br from-pink-400 via-purple-500 to-red-500">
+            <div className="relative h-48 bg-gradient-to-br from-pink-400 via-purple-500 to-red-500">
               <img
                 src={selectedProfile.image}
                 alt={selectedProfile.name}
@@ -132,8 +132,8 @@ const ProfileGallery = () => {
               >
                 <X className="w-5 h-5 text-purple-600" />
               </button>
-              <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-                <div className="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200">
+              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
+                <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200">
                   <img
                     src={selectedProfile.image}
                     alt={selectedProfile.name}
@@ -143,7 +143,7 @@ const ProfileGallery = () => {
               </div>
             </div>
 
-            <div className="pt-10 pb-4 px-4">
+            <div className="pt-16 pb-6 px-6">
               <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-2">
                 {selectedProfile.name}
               </h2>
