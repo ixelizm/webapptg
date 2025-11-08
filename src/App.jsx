@@ -17,10 +17,10 @@ const ProfileGallery = () => {
       phone: "+90 532 123 4567",
       location: "İstanbul",
       images: [
-        "./images/ahu1.jpg",
-        "./images/ahu2.jpg",
-        "./images/ahu3.jpg",
-        "./images/ahu4.jpg"
+        "/images/ahu1.jpg",
+        "/images/ahu2.jpg",
+        "/images/ahu3.jpg",
+        "/images/ahu4.jpg"
       ],
       bio: "Seyahat etmeyi ve fotoğrafçılığı seven bir grafik tasarımcı."
     },
