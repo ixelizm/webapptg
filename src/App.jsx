@@ -319,34 +319,6 @@ const ProfileGallery = () => {
               </p>
 
               <div className="space-y-4">
-                <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
-                  <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-2 rounded-lg">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Yaş</p>
-                    <p className="text-gray-800 font-semibold">{selectedProfile.age} yaşında</p>
-                  </div>
-                </div>
-
-                <div 
-                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
-                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
-                >
-                  <MessageCircle className="w-6 h-6 text-white" />
-                  <span className="text-white font-semibold text-lg">WhatsApp</span>
-                </div>
-                
-                <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
-                  <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
-                    <MapPin className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Konum</p>
-                    <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
-                  </div>
-                </div>
-
                 <div className="flex items-center gap-3 bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-lg">
                     {selectedProfile.accountType === "bireysel" ? (
@@ -362,7 +334,39 @@ const ProfileGallery = () => {
                     </p>
                   </div>
                 </div>
+                <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
+                  <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">Konum</p>
+                    <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
+                  <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-2 rounded-lg">
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">Yaş</p>
+                    <p className="text-gray-800 font-semibold">{selectedProfile.age} yaşında</p>
+                  </div>
+                </div>
+
+                
+                
+                
+
+                
               </div>
+
+              <div 
+                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
+                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
+                >
+                  <MessageCircle className="w-6 h-6 text-white" />
+                  <span className="text-white font-semibold text-lg">WhatsApp</span>
+                </div>
 
               <button
                 onClick={handleCloseProfile}
