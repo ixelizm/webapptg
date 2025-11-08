@@ -47,7 +47,15 @@ const ProfileGallery = ({ onAdminClick }) => {
       
       const response = await fetch(`${API_URL}/profiles?${params}`);
       const data = await response.json();
-      setProfiles(data);
+      
+      // 15-23 arası rastgele sayı seç
+      const randomCount = Math.floor(Math.random() * (23 - 15 + 1)) + 15;
+      
+      // Profilleri karıştır ve rastgele sayı kadar seç
+      const shuffled = [...data].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(randomCount, data.length));
+      
+      setProfiles(selected);
     } catch (error) {
       console.error('Profiller yüklenemedi:', error);
       alert('Profiller yüklenemedi!');
