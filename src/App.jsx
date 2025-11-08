@@ -11,14 +11,14 @@ const ProfileGallery = () => {
   const profiles = [
     {
       id: 1,
-      name: "Ayşe Yılmaz",
+      name: "Ahu Yılmaz",
       age: 24,
-      phone: "+90 532 123 4567",
+      phone: "+905416652535",
       location: "İstanbul",
       images: [
-        "https://i.pravatar.cc/300?img=1",
-        "https://i.pravatar.cc/300?img=47",
-        "https://i.pravatar.cc/300?img=45"
+        "/images/ahu1.jpg",
+        "/images/ahu2.jpg",
+        "/images/ahu3.jpg"
       ],
       bio: "Seyahat etmeyi ve fotoğrafçılığı seven bir grafik tasarımcı.",
       verified: true,
