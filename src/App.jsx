@@ -86,7 +86,7 @@ const ProfileGallery = () => {
           Profil Galerisi
         </h1>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
           {profiles.map((profile) => (
             <div
               key={profile.id}
