@@ -3,6 +3,9 @@ import { X, Phone, Calendar, MapPin } from 'lucide-react';
 
 const ProfileGallery = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
+  
+  // Grid sütun sayısını buradan değiştirebilirsiniz (2, 3, 4, vb.)
+  const gridColumns = 3;
 
   const profiles = [
     {
@@ -86,7 +89,7 @@ const ProfileGallery = () => {
           Profil Galerisi
         </h1>
         
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+        <div className={`grid gap-4`} style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}>
           {profiles.map((profile) => (
             <div
               key={profile.id}
