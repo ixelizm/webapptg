@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Profile from './models/Profile.js';
 import Application from './models/Application.js';
+import ViewCounter from './models/Views.js'
 import { upload, cloudinary } from './config/cloudinary.js';
 
 dotenv.config();
@@ -282,8 +283,57 @@ app.put('/api/profiles/:id', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+const ViewCounter = mongoose.model('ViewCounter', viewCounterSchema);
 
+// Görüntülenme sayısını artır
+app.post('/api/views/:page', async (req, res) => {
+  try {
+    const { page } = req.params;
+    
+    const counter = await ViewCounter.findOneAndUpdate(
+      { page },
+      { 
+        $inc: { count: 1 },
+        $set: { lastUpdated: new Date() }
+      },
+      { upsert: true, new: true }
+    );
+    
+    res.json({ 
+      page: counter.page, 
+      count: counter.count 
+    });
+  } catch (error) {
+    console.error('View counter error:', error);
+    res.status(500).json({ error: 'Sayaç güncellenemedi' });
+  }
+});
+
+// Görüntülenme sayısını getir
+app.get('/api/views/:page', async (req, res) => {
+  try {
+    const { page } = req.params;
+    const counter = await ViewCounter.findOne({ page });
+    
+    res.json({ 
+      page, 
+      count: counter ? counter.count : 0 
+    });
+  } catch (error) {
+    console.error('View counter error:', error);
+    res.status(500).json({ error: 'Sayaç getirilemedi' });
+  }
+});
 // 🗑️ Profil sil
+app.get('/api/views', async (req, res) => {
+  try {
+    const counters = await ViewCounter.find().sort({ count: -1 });
+    res.json(counters);
+  } catch (error) {
+    console.error('View counters error:', error);
+    res.status(500).json({ error: 'Sayaçlar getirilemedi' });
+  }
+});
 app.delete('/api/profiles/:id', async (req, res) => {
   try {
     const profile = await Profile.findByIdAndDelete(req.params.id);

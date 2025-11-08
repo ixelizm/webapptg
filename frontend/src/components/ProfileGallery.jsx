@@ -12,8 +12,26 @@ const ProfileGallery = ({ onAdminClick }) => {
   const [filterVerified, setFilterVerified] = useState('all');
   const [loading, setLoading] = useState(true);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [viewCount, setViewCount] = useState(0);
   
   const gridColumns = 3;
+
+  // Sayfa görüntülenme sayacını artır
+  useEffect(() => {
+    incrementViewCount();
+  }, []);
+
+  const incrementViewCount = async () => {
+    try {
+      const response = await fetch(`${API_URL}/views/gallery`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      setViewCount(data.count);
+    } catch (error) {
+      console.error('Görüntülenme sayacı güncellenemedi:', error);
+    }
+  };
 
   // Profilleri yükle
   useEffect(() => {
