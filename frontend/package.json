@@ -1,5 +1,5 @@
 {
-  "name": "telegram-profile-webapp",
+  "name": "telegram-profile-frontend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {

@@ -1,145 +1,41 @@
-import React, { useState } from 'react';
-import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, CheckCircle, XCircle, User, Building2, BadgeCheck, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, Settings } from 'lucide-react';
 
-const ProfileGallery = () => {
+const API_URL = 'http://localhost:5000/api';
+
+const ProfileGallery = ({ onAdminClick }) => {
+  const [profiles, setProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [filterAccountType, setFilterAccountType] = useState('all');
   const [filterVerified, setFilterVerified] = useState('all');
+  const [loading, setLoading] = useState(true);
   
   const gridColumns = 3;
 
-  const profiles = [
-    {
-      id: 1,
-      name: "Ahu Yılmaz",
-      age: 24,
-      phone: "+905416652535",
-      location: "İstanbul",
-      images: [
-        "/images/ahu1.jpg",
-        "/images/ahu2.jpg",
-        "/images/ahu3.jpg"
-      ],
-      bio: "Seyahat etmeyi ve fotoğrafçılığı seven bir grafik tasarımcı.",
-      verified: true,
-      accountType: "bireysel"
-    },
-    {
-      id: 2,
-      name: "Mehmet Demir",
-      age: 28,
-      phone: "+90 533 234 5678",
-      location: "Ankara",
-      images: [
-        "https://i.pravatar.cc/300?img=12",
-        "https://i.pravatar.cc/300?img=33",
-        "https://i.pravatar.cc/300?img=51"
-      ],
-      bio: "Yazılım geliştirici ve teknoloji tutkunu.",
-      verified: false,
-      accountType: "ajans"
-    },
-    {
-      id: 3,
-      name: "Zeynep Kaya",
-      age: 26,
-      phone: "+90 534 345 6789",
-      location: "İzmir",
-      images: [
-        "https://i.pravatar.cc/300?img=5",
-        "https://i.pravatar.cc/300?img=48",
-        "https://i.pravatar.cc/300?img=44"
-      ],
-      bio: "Yoga eğitmeni ve wellness koçu.",
-      verified: true,
-      accountType: "bireysel"
-    },
-    {
-      id: 4,
-      name: "Can Özdemir",
-      age: 30,
-      phone: "+90 535 456 7890",
-      location: "Antalya",
-      images: [
-        "https://i.pravatar.cc/300?img=13",
-        "https://i.pravatar.cc/300?img=52",
-        "https://i.pravatar.cc/300?img=59"
-      ],
-      bio: "Restoran işletmecisi ve mutfak sanatları meraklısı.",
-      verified: true,
-      accountType: "ajans"
-    },
-    {
-      id: 5,
-      name: "Elif Arslan",
-      age: 23,
-      phone: "+90 536 567 8901",
-      location: "Bursa",
-      images: [
-        "https://i.pravatar.cc/300?img=9",
-        "https://i.pravatar.cc/300?img=20",
-        "https://i.pravatar.cc/300?img=41"
-      ],
-      bio: "Müzik öğretmeni ve piyano sanatçısı.",
-      verified: false,
-      accountType: "bireysel"
-    },
-    {
-      id: 6,
-      name: "Burak Şahin",
-      age: 27,
-      phone: "+90 537 678 9012",
-      location: "Adana",
-      images: [
-        "https://i.pravatar.cc/300?img=14",
-        "https://i.pravatar.cc/300?img=60",
-        "https://i.pravatar.cc/300?img=68"
-      ],
-      bio: "Fitness antrenörü ve sporcu.",
-      verified: true,
-      accountType: "bireysel"
-    },
-    {
-      id: 7,
-      name: "Selin Çelik",
-      age: 25,
-      phone: "+90 538 789 0123",
-      location: "Eskişehir",
-      images: [
-        "https://i.pravatar.cc/300?img=10",
-        "https://i.pravatar.cc/300?img=32",
-        "https://i.pravatar.cc/300?img=49"
-      ],
-      bio: "İç mimar ve sanat galerisi küratörü.",
-      verified: false,
-      accountType: "ajans"
-    },
-    {
-      id: 8,
-      name: "Emre Aydın",
-      age: 29,
-      phone: "+90 539 890 1234",
-      location: "Trabzon",
-      images: [
-        "https://i.pravatar.cc/300?img=15",
-        "https://i.pravatar.cc/300?img=56",
-        "https://i.pravatar.cc/300?img=67"
-      ],
-      bio: "Deniz biyoloğu ve doğa fotoğrafçısı.",
-      verified: true,
-      accountType: "bireysel"
-    }
-  ];
+  // Profilleri yükle
+  useEffect(() => {
+    fetchProfiles();
+  }, [filterAccountType, filterVerified]);
 
-  const filteredProfiles = profiles.filter(profile => {
-    const accountTypeMatch = filterAccountType === 'all' || profile.accountType === filterAccountType;
-    const verifiedMatch = filterVerified === 'all' || 
-                          (filterVerified === 'verified' && profile.verified) ||
-                          (filterVerified === 'unverified' && !profile.verified);
-    return accountTypeMatch && verifiedMatch;
-  });
+  const fetchProfiles = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filterAccountType !== 'all') params.append('accountType', filterAccountType);
+      if (filterVerified !== 'all') params.append('verified', filterVerified);
+      
+      const response = await fetch(`${API_URL}/profiles?${params}`);
+      const data = await response.json();
+      setProfiles(data);
+    } catch (error) {
+      console.error('Profiller yüklenemedi:', error);
+      alert('Profiller yüklenemedi!');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
@@ -172,9 +68,17 @@ const ProfileGallery = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black p-4 pb-20">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-red-400 mb-6 text-center">
-          Profil Galerisi
-        </h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-red-400">
+            Profil Galerisi
+          </h1>
+          <button
+            onClick={onAdminClick}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-lg hover:shadow-lg transition-all"
+          >
+            <Settings className="w-6 h-6" />
+          </button>
+        </div>
         
         <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
           <div className="flex items-center gap-2">
@@ -205,32 +109,43 @@ const ProfileGallery = () => {
 
         <div className="text-center mb-4">
           <span className="text-purple-300 text-sm">
-            {filteredProfiles.length} profil gösteriliyor
+            {loading ? 'Yükleniyor...' : `${profiles.length} profil gösteriliyor`}
           </span>
         </div>
         
-        <div className={`grid gap-4`} style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}>
-          {filteredProfiles.map((profile) => (
-            <div
-              key={profile.id}
-              onClick={() => handleProfileClick(profile)}
-              className="relative group cursor-pointer"
-            >
-              <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200 shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <img
-                  src={profile.images[0]}
-                  alt={profile.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                  <p className="text-white font-semibold text-sm">{profile.name}</p>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+          </div>
+        ) : (
+          <div className={`grid gap-4`} style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}>
+            {profiles.map((profile) => (
+              <div
+                key={profile._id}
+                onClick={() => handleProfileClick(profile)}
+                className="relative group cursor-pointer"
+              >
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200 shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                  <img
+                    src={profile.images[0]}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                    <p className="text-white font-semibold text-sm">{profile.name}</p>
+                  </div>
+                  {profile.verified && (
+                    <div className="absolute top-2 right-2">
+                      <BadgeCheck className="w-6 h-6 text-white" fill="#3b82f6" />
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {filteredProfiles.length === 0 && (
+        {!loading && profiles.length === 0 && (
           <div className="text-center py-12">
             <p className="text-purple-300 text-lg">Seçilen filtrelere uygun profil bulunamadı.</p>
           </div>
@@ -334,15 +249,7 @@ const ProfileGallery = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
-                  <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
-                    <MapPin className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Konum</p>
-                    <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
-                  </div>
-                </div>
+
                 <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-2 rounded-lg">
                     <Calendar className="w-5 h-5 text-white" />
@@ -353,20 +260,24 @@ const ProfileGallery = () => {
                   </div>
                 </div>
 
-                
-                
-                
-
-                
+                <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
+                  <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">Konum</p>
+                    <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
+                  </div>
+                </div>
               </div>
 
               <div 
-                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
-                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
-                >
-                  <MessageCircle className="w-6 h-6 text-white" />
-                  <span className="text-white font-semibold text-lg">WhatsApp</span>
-                </div>
+                onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
+                className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200 mt-4"
+              >
+                <MessageCircle className="w-6 h-6 text-white" />
+                <span className="text-white font-semibold text-lg">WhatsApp</span>
+              </div>
 
               <button
                 onClick={handleCloseProfile}
