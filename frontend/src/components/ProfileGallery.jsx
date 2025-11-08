@@ -309,7 +309,7 @@ const ProfileGallery = ({ onAdminClick }) => {
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Konum</p>
                     <p className="text-gray-800 font-semibold">
-                      {profileDistances[selectedProfile._id]} km uzaklıkta
+                      Şuan size {profileDistances[selectedProfile._id]} km uzaklıkta
                     </p>
                   </div>
                 </div>
