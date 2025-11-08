@@ -275,12 +275,17 @@ app.get('/api/profiles', async (req, res) => {
       filter.verified = verified === 'verified';
     }
     
-    const profiles = await Profile.find(filter).sort({ createdAt: -1 });
+    // 30 adet profile alıyoruz
+    const profiles = await Profile.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(30);
+      
     res.json(profiles);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 // 🔍 Tek profil getir
 app.get('/api/profiles/:id', async (req, res) => {
