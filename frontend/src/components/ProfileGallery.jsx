@@ -68,7 +68,7 @@ const ProfileGallery = ({ onAdminClick }) => {
 
   // Eğer ApplicationForm gösterilecekse, onu render et
   if (showApplicationForm) {
-    return <ApplicationForm onBack={() => setShowApplicationForm(false)} />;
+    return <ApplicationForm onBackClick={() => setShowApplicationForm(false)} />;
   }
 
   return (
