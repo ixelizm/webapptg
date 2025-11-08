@@ -95,27 +95,49 @@ const ApplicationForm = ({ onBackClick }) => {
     try {
       const formDataToSend = new FormData();
       
+      // Text verilerini ekle
       formDataToSend.append('name', formData.name.trim());
-      formDataToSend.append('age', String(formData.age));
+      formDataToSend.append('age', parseInt(formData.age));
       formDataToSend.append('phone', formData.phone.trim());
       formDataToSend.append('location', formData.location.trim());
       formDataToSend.append('accountType', formData.accountType);
       formDataToSend.append('bio', formData.bio.trim());
       
-      images.forEach((image) => {
-        formDataToSend.append('images', image);
+      // Resimleri ekle - field name'i 'images' olarak gönder
+      images.forEach((image, index) => {
+        formDataToSend.append('images', image, image.name || `image-${index}.jpg`);
       });
 
-      console.log('Gönderilen veriler:');
+      // Debug: Gönderilen verileri konsola yazdır
+      console.log('=== FORM DATA DEBUG ===');
+      console.log('Form verileri:');
+      console.log('- name:', formData.name.trim());
+      console.log('- age:', parseInt(formData.age));
+      console.log('- phone:', formData.phone.trim());
+      console.log('- location:', formData.location.trim());
+      console.log('- accountType:', formData.accountType);
+      console.log('- bio:', formData.bio.trim());
+      console.log('- Resim sayısı:', images.length);
+      
+      console.log('\nFormData entries:');
       for (let [key, value] of formDataToSend.entries()) {
-        console.log(key, ':', value);
+        if (value instanceof File) {
+          console.log(key, ':', value.name, '(', value.size, 'bytes )');
+        } else {
+          console.log(key, ':', value);
+        }
       }
 
+      console.log('\nAPI\'ye istek gönderiliyor...');
       const response = await fetch(`${API_URL}/profiles`, {
         method: 'POST',
         body: formDataToSend
+        // NOT: Content-Type header'ı eklemeyin, browser otomatik ekler
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', [...response.headers.entries()]);
+      
       const responseData = await response.json();
       console.log('Sunucu yanıtı:', responseData);
 
