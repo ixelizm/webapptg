@@ -111,7 +111,7 @@ const ProfileGallery = ({ onAdminClick }) => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-red-400">
-            Profil Galerisi
+            BossO | VIP
           </h1>
           <button
             onClick={() => setShowApplicationForm(true)}
