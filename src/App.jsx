@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
-import { X, Phone, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, CheckCircle, XCircle, User, Building2, BadgeCheck } from 'lucide-react';
 
 const ProfileGallery = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   
-  // Grid sütun sayısını buradan değiştirebilirsiniz (2, 3, 4, vb.)
   const gridColumns = 3;
 
   const profiles = [
     {
       id: 1,
-      name: "Ahu Yılmaz",
+      name: "Ayşe Yılmaz",
       age: 24,
       phone: "+90 532 123 4567",
       location: "İstanbul",
       images: [
-        "/images/ahu1.jpg",
-        "/images/ahu2.jpg",
-        "/images/ahu3.jpg",
-        "/images/ahu4.jpg"
+        "https://i.pravatar.cc/300?img=1",
+        "https://i.pravatar.cc/300?img=47",
+        "https://i.pravatar.cc/300?img=45"
       ],
-      bio: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+      bio: "Seyahat etmeyi ve fotoğrafçılığı seven bir grafik tasarımcı.",
+      verified: true,
+      accountType: "bireysel"
     },
     {
       id: 2,
@@ -35,7 +35,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=33",
         "https://i.pravatar.cc/300?img=51"
       ],
-      bio: "Yazılım geliştirici ve teknoloji tutkunu."
+      bio: "Yazılım geliştirici ve teknoloji tutkunu.",
+      verified: false,
+      accountType: "ajans"
     },
     {
       id: 3,
@@ -48,7 +50,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=48",
         "https://i.pravatar.cc/300?img=44"
       ],
-      bio: "Yoga eğitmeni ve wellness koçu."
+      bio: "Yoga eğitmeni ve wellness koçu.",
+      verified: true,
+      accountType: "bireysel"
     },
     {
       id: 4,
@@ -61,7 +65,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=52",
         "https://i.pravatar.cc/300?img=59"
       ],
-      bio: "Restoran işletmecisi ve mutfak sanatları meraklısı."
+      bio: "Restoran işletmecisi ve mutfak sanatları meraklısı.",
+      verified: true,
+      accountType: "ajans"
     },
     {
       id: 5,
@@ -74,7 +80,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=20",
         "https://i.pravatar.cc/300?img=41"
       ],
-      bio: "Müzik öğretmeni ve piyano sanatçısı."
+      bio: "Müzik öğretmeni ve piyano sanatçısı.",
+      verified: false,
+      accountType: "bireysel"
     },
     {
       id: 6,
@@ -87,7 +95,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=60",
         "https://i.pravatar.cc/300?img=68"
       ],
-      bio: "Fitness antrenörü ve sporcu."
+      bio: "Fitness antrenörü ve sporcu.",
+      verified: true,
+      accountType: "bireysel"
     },
     {
       id: 7,
@@ -100,7 +110,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=32",
         "https://i.pravatar.cc/300?img=49"
       ],
-      bio: "İç mimar ve sanat galerisi küratörü."
+      bio: "İç mimar ve sanat galerisi küratörü.",
+      verified: false,
+      accountType: "ajans"
     },
     {
       id: 8,
@@ -113,7 +125,9 @@ const ProfileGallery = () => {
         "https://i.pravatar.cc/300?img=56",
         "https://i.pravatar.cc/300?img=67"
       ],
-      bio: "Deniz biyoloğu ve doğa fotoğrafçısı."
+      bio: "Deniz biyoloğu ve doğa fotoğrafçısı.",
+      verified: true,
+      accountType: "bireysel"
     }
   ];
 
@@ -148,7 +162,7 @@ const ProfileGallery = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black p-4 pb-20">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 mb-6 text-center">
+        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-red-400 mb-6 text-center">
           Profil Galerisi
         </h1>
         
@@ -190,7 +204,6 @@ const ProfileGallery = () => {
                 className="w-full h-full object-cover"
               />
               
-              {/* Navigation Arrows */}
               {selectedProfile.images.length > 1 && (
                 <>
                   <button
@@ -212,14 +225,12 @@ const ProfileGallery = () => {
                     <ChevronRight className="w-5 h-5 text-purple-600" />
                   </button>
                   
-                  {/* Image Counter */}
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
                     {currentImageIndex + 1} / {selectedProfile.images.length}
                   </div>
                 </>
               )}
               
-              {/* Close Button */}
               <button
                 onClick={handleCloseProfile}
                 className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors shadow-lg z-10"
@@ -227,7 +238,6 @@ const ProfileGallery = () => {
                 <X className="w-5 h-5 text-purple-600" />
               </button>
               
-              {/* Avatar */}
               <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
                 <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-pink-200 to-purple-200">
                   <img
@@ -240,15 +250,26 @@ const ProfileGallery = () => {
             </div>
 
             <div className="pt-16 pb-6 px-6">
-              <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-2">
-                {selectedProfile.name}
-              </h2>
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
+                  {selectedProfile.name}
+                </h2>
+                {selectedProfile.verified && (
+                  <div className="flex-shrink-0">
+                    <BadgeCheck className="w-7 h-7 text-white" fill="#3b82f6" strokeWidth={2.5} />
+                  </div>
+                )}
+              </div>
+              
+              <p className={`text-center text-xs font-medium mb-3 ${selectedProfile.verified ? 'text-blue-500' : 'text-gray-400'}`}>
+                {selectedProfile.verified ? "Kimlik Onaylı Hesap" : "Henüz Onaylanmamış Hesap"}
+              </p>
               
               <p className="text-gray-600 text-center text-sm mb-6 italic">
                 {selectedProfile.bio}
               </p>
 
-              <div className="space-y-4">
+
                 <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-2 rounded-lg">
                     <Calendar className="w-5 h-5 text-white" />
@@ -259,16 +280,7 @@ const ProfileGallery = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 bg-gradient-to-r from-purple-50 to-red-50 p-4 rounded-xl">
-                  <div className="bg-gradient-to-br from-purple-500 to-red-500 p-2 rounded-lg">
-                    <Phone className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Telefon</p>
-                    <p className="text-gray-800 font-semibold">{selectedProfile.phone}</p>
-                  </div>
-                </div>
-
+                
                 <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
                     <MapPin className="w-5 h-5 text-white" />
@@ -278,7 +290,30 @@ const ProfileGallery = () => {
                     <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
                   </div>
                 </div>
+
+                <div className="flex items-center gap-3 bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl">
+                  <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-lg">
+                    {selectedProfile.accountType === "bireysel" ? (
+                      <User className="w-5 h-5 text-white" />
+                    ) : (
+                      <Building2 className="w-5 h-5 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-medium">Hesap Türü</p>
+                    <p className="text-gray-800 font-semibold">
+                      {selectedProfile.accountType === "bireysel" ? "Bireysel" : "Ajans"}
+                    </p>
+                  </div>
+                </div>
               </div>
+                    <div 
+                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
+                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
+                >
+                  <MessageCircle className="w-6 h-6 text-white" />
+                  <span className="text-white font-semibold text-lg">WhatsApp</span>
+                </div>
 
               <button
                 onClick={handleCloseProfile}
@@ -288,10 +323,9 @@ const ProfileGallery = () => {
               </button>
             </div>
           </div>
-        </div>
+        
       )}
 
-      {/* Fullscreen Image Viewer */}
       {isFullscreen && selectedProfile && (
         <div
           className="fixed inset-0 bg-black z-[60] flex items-center justify-center"
