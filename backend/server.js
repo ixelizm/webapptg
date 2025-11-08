@@ -283,7 +283,7 @@ app.put('/api/profiles/:id', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
-const ViewCounter = mongoose.model('ViewCounter', viewCounterSchema);
+
 
 // Görüntülenme sayısını artır
 app.post('/api/views/:page', async (req, res) => {
