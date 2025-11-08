@@ -4,6 +4,7 @@ import { X, Phone, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-re
 const ProfileGallery = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   // Grid sütun sayısını buradan değiştirebilirsiniz (2, 3, 4, vb.)
   const gridColumns = 3;
@@ -118,11 +119,13 @@ const ProfileGallery = () => {
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
     setCurrentImageIndex(0);
+    setIsFullscreen(false);
   };
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
     setCurrentImageIndex(0);
+    setIsFullscreen(false);
   };
 
   const nextImage = () => {
@@ -179,7 +182,7 @@ const ProfileGallery = () => {
             className="bg-white rounded-3xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl animate-in zoom-in duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-64 bg-gradient-to-br from-pink-400 via-purple-500 to-red-500">
+            <div className="relative h-64 bg-gradient-to-br from-pink-400 via-purple-500 to-red-500 cursor-pointer" onClick={() => setIsFullscreen(true)}>
               <img
                 src={selectedProfile.images[currentImageIndex]}
                 alt={selectedProfile.name}
@@ -284,6 +287,55 @@ const ProfileGallery = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Fullscreen Image Viewer */}
+      {isFullscreen && selectedProfile && (
+        <div
+          className="fixed inset-0 bg-black z-[60] flex items-center justify-center"
+          onClick={() => setIsFullscreen(false)}
+        >
+          <button
+            onClick={() => setIsFullscreen(false)}
+            className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-colors shadow-lg z-10"
+          >
+            <X className="w-6 h-6 text-purple-600" />
+          </button>
+
+          <img
+            src={selectedProfile.images[currentImageIndex]}
+            alt={selectedProfile.name}
+            className="max-w-full max-h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {selectedProfile.images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-colors shadow-lg"
+              >
+                <ChevronLeft className="w-6 h-6 text-purple-600" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-colors shadow-lg"
+              >
+                <ChevronRight className="w-6 h-6 text-purple-600" />
+              </button>
+
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-full text-sm font-medium">
+                {currentImageIndex + 1} / {selectedProfile.images.length}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
