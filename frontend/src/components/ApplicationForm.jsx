@@ -16,6 +16,7 @@ const ApplicationForm = ({ onBackClick }) => {
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
@@ -93,55 +94,56 @@ const ApplicationForm = ({ onBackClick }) => {
     setLoading(true);
 
     try {
-      const formDataToSend = new FormData();
-      
-      // Text verilerini ekle
-      formDataToSend.append('name', formData.name.trim());
-      formDataToSend.append('age', parseInt(formData.age));
-      formDataToSend.append('phone', formData.phone.trim());
-      formDataToSend.append('location', formData.location.trim());
-      formDataToSend.append('accountType', formData.accountType);
-      formDataToSend.append('bio', formData.bio.trim());
-      
-      // Resimleri ekle - field name'i 'images' olarak gönder
-      images.forEach((image, index) => {
-        formDataToSend.append('images', image, image.name || `image-${index}.jpg`);
+      // 1. Önce resimleri Cloudinary'ye yükle
+      setLoadingMessage('Fotoğraflar yükleniyor...');
+      console.log('📤 Resimler yükleniyor...');
+      const imageFormData = new FormData();
+      images.forEach((image) => {
+        imageFormData.append('images', image);
       });
 
-      // Debug: Gönderilen verileri konsola yazdır
-      console.log('=== FORM DATA DEBUG ===');
-      console.log('Form verileri:');
-      console.log('- name:', formData.name.trim());
-      console.log('- age:', parseInt(formData.age));
-      console.log('- phone:', formData.phone.trim());
-      console.log('- location:', formData.location.trim());
-      console.log('- accountType:', formData.accountType);
-      console.log('- bio:', formData.bio.trim());
-      console.log('- Resim sayısı:', images.length);
-      
-      console.log('\nFormData entries:');
-      for (let [key, value] of formDataToSend.entries()) {
-        if (value instanceof File) {
-          console.log(key, ':', value.name, '(', value.size, 'bytes )');
-        } else {
-          console.log(key, ':', value);
-        }
+      const uploadResponse = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        body: imageFormData
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Resimler yüklenemedi');
       }
 
-      console.log('\nAPI\'ye istek gönderiliyor...');
-      const response = await fetch(`${API_URL}/profiles`, {
+      const uploadData = await uploadResponse.json();
+      const imageUrls = uploadData.images;
+      console.log('✅ Resimler yüklendi:', imageUrls);
+
+      // 2. Başvuruyu gönder
+      setLoadingMessage('Başvuru gönderiliyor...');
+      console.log('📝 Başvuru gönderiliyor...');
+      const applicationData = {
+        name: formData.name.trim(),
+        age: parseInt(formData.age),
+        phone: formData.phone.trim(),
+        location: formData.location.trim(),
+        accountType: formData.accountType,
+        bio: formData.bio.trim(),
+        images: imageUrls,
+        createdAt: new Date().toISOString()
+      };
+
+      console.log('Gönderilen başvuru verisi:', applicationData);
+
+      const response = await fetch(`${API_URL}/applications`, {
         method: 'POST',
-        body: formDataToSend
-        // NOT: Content-Type header'ı eklemeyin, browser otomatik ekler
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(applicationData)
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', [...response.headers.entries()]);
-      
       const responseData = await response.json();
       console.log('Sunucu yanıtı:', responseData);
 
       if (response.ok) {
+        setLoadingMessage('Başarılı! Yönlendiriliyor...');
         alert('Başvurunuz başarıyla gönderildi! Onay bekliyor.');
         setFormData({
           name: '',
@@ -157,13 +159,14 @@ const ApplicationForm = ({ onBackClick }) => {
           onBackClick();
         }, 1500);
       } else {
-        alert('Başvuru gönderilemedi: ' + (responseData.message || 'Bir hata oluştu'));
+        alert('Başvuru gönderilemedi: ' + (responseData.error || responseData.message || 'Bir hata oluştu'));
       }
     } catch (error) {
       console.error('Başvuru hatası:', error);
-      alert('Başvuru gönderilirken bir hata oluştu!');
+      alert('Başvuru gönderilirken bir hata oluştu: ' + error.message);
     } finally {
       setLoading(false);
+      setLoadingMessage('');
     }
   };
 
@@ -358,7 +361,7 @@ const ApplicationForm = ({ onBackClick }) => {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Gönderiliyor...
+                  {loadingMessage || 'Gönderiliyor...'}
                 </span>
               ) : (
                 'Başvuruyu Gönder'
