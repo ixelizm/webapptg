@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Upload, X, Trash2, Edit, Save } from 'lucide-react';
 
-const API_URL = 'http://webapptg-production.up.railway.app/api';
+const API_URL = 'https://webapptg-production.up.railway.app/api';
 
 const AdminPanel = ({ onBack }) => {
   const [profiles, setProfiles] = useState([]);

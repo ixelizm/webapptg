@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, Settings } from 'lucide-react';
 
-const API_URL = 'http://webapptg-production.up.railway.app/api';
+const API_URL = 'https://webapptg-production.up.railway.app/api';
 
 const ProfileGallery = ({ onAdminClick }) => {
   const [profiles, setProfiles] = useState([]);
