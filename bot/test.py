@@ -77,9 +77,9 @@ for z in list(organized.values()):
     for i in z:
         asset_folder = i.get("asset_folder", "unknown")
         if last.get(asset_folder):
-            last[asset_folder].append(i["url"])
+            last[asset_folder].append(i["url"].replace("http", "https"))
         else:
-            last.update({asset_folder: [i["url"]]})
+            last.update({asset_folder: [i["url"].replace("http", "https")]})
 
 print(f"\n{'='*60}")
 print(f"📁 Toplam {len(last)} farklı klasör bulundu")

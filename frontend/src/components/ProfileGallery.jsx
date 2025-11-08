@@ -15,7 +15,7 @@ const ProfileGallery = ({ onAdminClick }) => {
   const [viewCount, setViewCount] = useState(0);
   const [profileDistances, setProfileDistances] = useState({});
   
-  const gridColumns = 3;
+  const gridColumns = 2;
 
   // Sayfa görüntülenme sayacını artır
   useEffect(() => {
