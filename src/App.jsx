@@ -143,7 +143,7 @@ const ProfileGallery = () => {
               </div>
             </div>
 
-            <div className="pt-20 pb-6 px-6">
+            <div className="pt-10 pb-4 px-4">
               <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-2">
                 {selectedProfile.name}
               </h2>
