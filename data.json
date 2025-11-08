@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Selin Çelik",
+        "age": 22,
+        "phone": "+905418425394",
+        "location": "İstanbul, Türkiye",
+        "images": [
+            
+        ],
+        "bio": "Çelik gibi olduysa güzel bir gece geçirme vakti gelmiştir.Whatsapptan yaz buluşalım.",
+        "verified": true,
+        "accountType": "bireysel"
+    },
+    {
+        "name": "Ahu Şaşmaz",
+        "age": 23,
+        "phone": "+905418425394",
+        "location": "İstanbul, Türkiye",
+        "images": [
+            
+        ],
+        "bio": "Geceler soğuduysa gel yatakta beraber ısınalım aşkım.",
+        "verified": true,
+        "accountType": "bireysel"
+    },
+    {
+        "name": "Hülya Akduru",
+        "age": 20,
+        "phone": "+905418425394",
+        "location": "İstanbul, Türkiye",
+        "images": [
+           
+        ],
+        "bio": "Zevklerin en duru noktasındasında buluşalım hayatım. Daha ne bekliyorsun. Davetiye mi?",
+        "verified": true,
+        "accountType": "bireysel"
+    },
+    {
+        "name": "Yağmur Aytekin",
+        "age": 25,
+        "phone": "+905418425394",
+        "location": "İstanbul, Türkiye",
+        "images": [
+            
+        ],
+        "bio": "Yağmurdan gelen toprağa gidermiş, toprak olmaya hazır mısın canım?",
+        "verified": true,
+        "accountType": "bireysel"
+    },
+    {
+        "name": "Ahu Işıker",
+        "age": 24,
+        "phone": "+905418425394",
+        "location": "İstanbul, Türkiye",
+        "images": [
+            
+        ],
+        "bio": "Işıltılı geceler için bana yazmaya ne dersin?",
+        "verified": true,
+        "accountType": "bireysel"
+    }
+]

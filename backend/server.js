@@ -22,7 +22,46 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.error('❌ MongoDB bağlantı hatası:', err));
 
 // Health check
+// Kullanıcı kontrolü endpoint'i
+app.get('/api/telegram-users/:telegramId', async (req, res) => {
+  try {
+    const { telegramId } = req.params;
+    const user = await TelegramUser.findOne({ telegramId });
+    
+    if (user) {
+      res.json({ exists: true, user });
+    } else {
+      res.json({ exists: false });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Sunucu hatası' });
+  }
+});
 
+// Kullanıcı kaydetme endpoint'i
+app.post('/api/telegram-users', async (req, res) => {
+  try {
+    const { telegramId, username, firstName, lastName, phone, location } = req.body;
+    
+    const newUser = new TelegramUser({
+      telegramId,
+      username,
+      firstName,
+      lastName,
+      phone,
+      location: {
+        latitude: location.latitude,
+        longitude: location.longitude
+      },
+      createdAt: new Date()
+    });
+    
+    await newUser.save();
+    res.json({ success: true, user: newUser });
+  } catch (error) {
+    res.status(500).json({ error: 'Kullanıcı kaydedilemedi' });
+  }
+});
 app.post('/api/applications', async (req, res) => {
   try {
     const {

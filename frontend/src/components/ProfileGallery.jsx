@@ -13,6 +13,7 @@ const ProfileGallery = ({ onAdminClick }) => {
   const [loading, setLoading] = useState(true);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [viewCount, setViewCount] = useState(0);
+  const [profileDistances, setProfileDistances] = useState({});
   
   const gridColumns = 3;
 
@@ -54,6 +55,14 @@ const ProfileGallery = ({ onAdminClick }) => {
       // Profilleri karıştır ve rastgele sayı kadar seç
       const shuffled = [...data].sort(() => Math.random() - 0.5);
       const selected = shuffled.slice(0, Math.min(randomCount, data.length));
+      
+      // Her profil için 6-20 km arası rastgele küsuratlı mesafe oluştur
+      const distances = {};
+      selected.forEach(profile => {
+        const randomDistance = (Math.random() * (20 - 6) + 6).toFixed(1);
+        distances[profile._id] = randomDistance;
+      });
+      setProfileDistances(distances);
       
       setProfiles(selected);
     } catch (error) {
@@ -299,7 +308,9 @@ const ProfileGallery = ({ onAdminClick }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Konum</p>
-                    <p className="text-gray-800 font-semibold">{selectedProfile.location}</p>
+                    <p className="text-gray-800 font-semibold">
+                      {profileDistances[selectedProfile._id]} km uzaklıkta
+                    </p>
                   </div>
                 </div>
               </div>
