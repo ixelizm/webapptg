@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, CheckCircle, XCircle, User, Building2, BadgeCheck } from 'lucide-react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, CheckCircle, XCircle, User, Building2, BadgeCheck, Filter } from 'lucide-react';
 
 const ProfileGallery = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [filterAccountType, setFilterAccountType] = useState('all');
+  const [filterVerified, setFilterVerified] = useState('all');
   
   const gridColumns = 3;
 
@@ -131,6 +133,14 @@ const ProfileGallery = () => {
     }
   ];
 
+  const filteredProfiles = profiles.filter(profile => {
+    const accountTypeMatch = filterAccountType === 'all' || profile.accountType === filterAccountType;
+    const verifiedMatch = filterVerified === 'all' || 
+                          (filterVerified === 'verified' && profile.verified) ||
+                          (filterVerified === 'unverified' && !profile.verified);
+    return accountTypeMatch && verifiedMatch;
+  });
+
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
     setCurrentImageIndex(0);
@@ -166,8 +176,41 @@ const ProfileGallery = () => {
           Profil Galerisi
         </h1>
         
+        <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-purple-400" />
+            <select
+              value={filterAccountType}
+              onChange={(e) => setFilterAccountType(e.target.value)}
+              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
+            >
+              <option value="all">Tüm Hesap Türleri</option>
+              <option value="bireysel">Bireysel</option>
+              <option value="ajans">Ajans</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <select
+              value={filterVerified}
+              onChange={(e) => setFilterVerified(e.target.value)}
+              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
+            >
+              <option value="all">Tüm Onay Durumları</option>
+              <option value="verified">Onaylı</option>
+              <option value="unverified">Onaysız</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="text-center mb-4">
+          <span className="text-purple-300 text-sm">
+            {filteredProfiles.length} profil gösteriliyor
+          </span>
+        </div>
+        
         <div className={`grid gap-4`} style={{ gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }}>
-          {profiles.map((profile) => (
+          {filteredProfiles.map((profile) => (
             <div
               key={profile.id}
               onClick={() => handleProfileClick(profile)}
@@ -186,6 +229,12 @@ const ProfileGallery = () => {
             </div>
           ))}
         </div>
+
+        {filteredProfiles.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-purple-300 text-lg">Seçilen filtrelere uygun profil bulunamadı.</p>
+          </div>
+        )}
       </div>
 
       {selectedProfile && (
@@ -269,7 +318,7 @@ const ProfileGallery = () => {
                 {selectedProfile.bio}
               </p>
 
-
+              <div className="space-y-4">
                 <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-2 rounded-lg">
                     <Calendar className="w-5 h-5 text-white" />
@@ -280,6 +329,13 @@ const ProfileGallery = () => {
                   </div>
                 </div>
 
+                <div 
+                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
+                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
+                >
+                  <MessageCircle className="w-6 h-6 text-white" />
+                  <span className="text-white font-semibold text-lg">WhatsApp</span>
+                </div>
                 
                 <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
                   <div className="bg-gradient-to-br from-red-500 to-pink-500 p-2 rounded-lg">
@@ -307,13 +363,6 @@ const ProfileGallery = () => {
                   </div>
                 </div>
               </div>
-                    <div 
-                  onClick={() => window.open(`https://wa.me/${selectedProfile.phone.replace(/\s/g, '')}`, '_blank')}
-                  className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-xl cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200"
-                >
-                  <MessageCircle className="w-6 h-6 text-white" />
-                  <span className="text-white font-semibold text-lg">WhatsApp</span>
-                </div>
 
               <button
                 onClick={handleCloseProfile}
@@ -323,7 +372,7 @@ const ProfileGallery = () => {
               </button>
             </div>
           </div>
-        
+        </div>
       )}
 
       {isFullscreen && selectedProfile && (
