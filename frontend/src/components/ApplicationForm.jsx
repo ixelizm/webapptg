@@ -24,7 +24,6 @@ const ApplicationForm = ({ onBackClick }) => {
       ...prev,
       [name]: value
     }));
-    // Hata mesajını temizle
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -41,7 +40,6 @@ const ApplicationForm = ({ onBackClick }) => {
     const newImages = [...images, ...files];
     setImages(newImages);
 
-    // Preview oluştur
     files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -87,9 +85,7 @@ const ApplicationForm = ({ onBackClick }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
@@ -97,28 +93,34 @@ const ApplicationForm = ({ onBackClick }) => {
     setLoading(true);
 
     try {
-      // FormData oluştur
       const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('age', formData.age);
-      formDataToSend.append('phone', formData.phone);
-      formDataToSend.append('location', formData.location);
-      formDataToSend.append('accountType', formData.accountType);
-      formDataToSend.append('bio', formData.bio);
       
-      // Fotoğrafları ekle
-      images.forEach((image, index) => {
+      formDataToSend.append('name', formData.name.trim());
+      formDataToSend.append('age', String(formData.age));
+      formDataToSend.append('phone', formData.phone.trim());
+      formDataToSend.append('location', formData.location.trim());
+      formDataToSend.append('accountType', formData.accountType);
+      formDataToSend.append('bio', formData.bio.trim());
+      
+      images.forEach((image) => {
         formDataToSend.append('images', image);
       });
+
+      console.log('Gönderilen veriler:');
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(key, ':', value);
+      }
 
       const response = await fetch(`${API_URL}/profiles`, {
         method: 'POST',
         body: formDataToSend
       });
 
+      const responseData = await response.json();
+      console.log('Sunucu yanıtı:', responseData);
+
       if (response.ok) {
         alert('Başvurunuz başarıyla gönderildi! Onay bekliyor.');
-        // Formu temizle
         setFormData({
           name: '',
           age: '',
@@ -129,13 +131,11 @@ const ApplicationForm = ({ onBackClick }) => {
         });
         setImages([]);
         setImagePreviews([]);
-        // Ana sayfaya dön
         setTimeout(() => {
           onBackClick();
         }, 1500);
       } else {
-        const errorData = await response.json();
-        alert('Başvuru gönderilemedi: ' + (errorData.message || 'Bir hata oluştu'));
+        alert('Başvuru gönderilemedi: ' + (responseData.message || 'Bir hata oluştu'));
       }
     } catch (error) {
       console.error('Başvuru hatası:', error);
@@ -161,8 +161,7 @@ const ApplicationForm = ({ onBackClick }) => {
         </div>
 
         <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* İsim */}
+          <div className="space-y-6">
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 İsim / Takma Ad *
@@ -180,7 +179,6 @@ const ApplicationForm = ({ onBackClick }) => {
               )}
             </div>
 
-            {/* Yaş */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 Yaş *
@@ -200,7 +198,6 @@ const ApplicationForm = ({ onBackClick }) => {
               )}
             </div>
 
-            {/* Telefon */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 WhatsApp Telefon Numarası *
@@ -218,7 +215,6 @@ const ApplicationForm = ({ onBackClick }) => {
               )}
             </div>
 
-            {/* Konum */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 Konum (Şehir) *
@@ -236,7 +232,6 @@ const ApplicationForm = ({ onBackClick }) => {
               )}
             </div>
 
-            {/* Hesap Türü */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 Hesap Türü *
@@ -269,7 +264,6 @@ const ApplicationForm = ({ onBackClick }) => {
               </div>
             </div>
 
-            {/* Bio */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 Kısa Açıklama *
@@ -287,7 +281,6 @@ const ApplicationForm = ({ onBackClick }) => {
               )}
             </div>
 
-            {/* Fotoğraf Yükleme */}
             <div>
               <label className="block text-purple-300 text-sm font-semibold mb-2">
                 Fotoğraflar * (En az 1, en fazla 6)
@@ -335,9 +328,8 @@ const ApplicationForm = ({ onBackClick }) => {
               </p>
             </div>
 
-            {/* Submit Button */}
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={loading}
               className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-red-500 text-white font-bold py-4 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
@@ -354,7 +346,7 @@ const ApplicationForm = ({ onBackClick }) => {
             <p className="text-gray-400 text-xs text-center">
               * işaretli alanlar zorunludur. Başvurunuz onaylandıktan sonra profiliniz yayınlanacaktır.
             </p>
-          </form>
+          </div>
         </div>
       </div>
     </div>
