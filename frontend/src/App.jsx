@@ -7,11 +7,9 @@ const App = () => {
 
   return (
     <div>
-      {showAdmin ? (
-        <AdminPanel onBack={() => setShowAdmin(false)} />
-      ) : (
-        <ProfileGallery onAdminClick={() => setShowAdmin(true)} />
-      )}
+      
+        <ProfileGallery />
+
     </div>
   );
 };
