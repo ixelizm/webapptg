@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, Settings } from 'lucide-react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus } from 'lucide-react';
 
 const API_URL = 'https://webapptg-production.up.railway.app/api';
 
@@ -74,9 +74,10 @@ const ProfileGallery = ({ onAdminClick }) => {
           </h1>
           <button
             onClick={onAdminClick}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-lg hover:shadow-lg transition-all"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
           >
-            <Settings className="w-6 h-6" />
+            <UserPlus className="w-5 h-5" />
+            <span className="font-semibold">Model Başvurusu</span>
           </button>
         </div>
         

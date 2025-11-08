@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Profile from './models/Profile.js';
+import Application from './models/Application.js';
 import { upload, cloudinary } from './config/cloudinary.js';
 
 dotenv.config();
@@ -11,7 +12,8 @@ const app = express();
 
 app.use(cors());
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // MongoDB bağlantısı
 mongoose.connect(process.env.MONGODB_URI)
@@ -19,6 +21,184 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.error('❌ MongoDB bağlantı hatası:', err));
 
 // Health check
+
+app.post('/api/applications', async (req, res) => {
+  try {
+    const {
+      name,
+      age,
+      location,
+      phone,
+      bio,
+      accountType,
+      images,
+      createdAt
+    } = req.body;
+
+    // Validasyon
+    if (!name || !age || !location || !phone || !bio || !images || images.length === 0) {
+      return res.status(400).json({ 
+        error: 'Tüm alanlar doldurulmalıdır' 
+      });
+    }
+
+    if (age < 18 || age > 100) {
+      return res.status(400).json({ 
+        error: 'Yaş 18-100 arasında olmalıdır' 
+      });
+    }
+
+    if (bio.length < 20) {
+      return res.status(400).json({ 
+        error: 'Biyografi en az 20 karakter olmalıdır' 
+      });
+    }
+
+    if (images.length > 5) {
+      return res.status(400).json({ 
+        error: 'En fazla 5 fotoğraf yüklenebilir' 
+      });
+    }
+
+    // Telefon numarası kontrolü (aynı numara ile başka başvuru var mı?)
+    const existingApplication = await Application.findOne({ 
+      phone, 
+      status: 'pending' 
+    });
+    
+    if (existingApplication) {
+      return res.status(400).json({ 
+        error: 'Bu telefon numarası ile bekleyen bir başvuru bulunmaktadır' 
+      });
+    }
+
+    // Yeni başvuru oluştur
+    const newApplication = new Application({
+      name,
+      age,
+      location,
+      phone,
+      bio,
+      accountType,
+      images,
+      verified: false,
+      status: 'pending',
+      createdAt: createdAt || new Date()
+    });
+
+    await newApplication.save();
+
+    res.status(201).json({
+      message: 'Başvurunuz başarıyla alındı',
+      applicationId: newApplication._id
+    });
+
+  } catch (error) {
+    console.error('Başvuru hatası:', error);
+    res.status(500).json({ 
+      error: 'Başvuru oluşturulurken bir hata oluştu' 
+    });
+  }
+});
+
+// 2. Tüm başvuruları getir (Admin paneli için)
+app.get('/api/applications', async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = {};
+    
+    if (status) {
+      filter.status = status;
+    }
+
+    const applications = await Application.find(filter).sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (error) {
+    console.error('Başvuruları getirme hatası:', error);
+    res.status(500).json({ error: 'Başvurular getirilemedi' });
+  }
+});
+
+// 3. Başvuruyu onayla ve profile çevir
+app.post('/api/applications/:id/approve', async (req, res) => {
+  try {
+    const application = await Application.findById(req.params.id);
+    
+    if (!application) {
+      return res.status(404).json({ error: 'Başvuru bulunamadı' });
+    }
+
+    if (application.status !== 'pending') {
+      return res.status(400).json({ 
+        error: 'Bu başvuru zaten işleme alınmış' 
+      });
+    }
+
+    // Profile dönüştür
+    const newProfile = new Profile({
+      name: application.name,
+      age: application.age,
+      location: application.location,
+      phone: application.phone,
+      bio: application.bio,
+      accountType: application.accountType,
+      images: application.images,
+      verified: req.body.verified || false,
+      active: true
+    });
+
+    await newProfile.save();
+
+    // Başvuruyu güncelle
+    application.status = 'approved';
+    application.approvedAt = new Date();
+    await application.save();
+
+    res.json({
+      message: 'Başvuru onaylandı ve profil oluşturuldu',
+      profileId: newProfile._id
+    });
+
+  } catch (error) {
+    console.error('Başvuru onaylama hatası:', error);
+    res.status(500).json({ error: 'Başvuru onaylanamadı' });
+  }
+});
+
+// 4. Başvuruyu reddet
+app.post('/api/applications/:id/reject', async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const application = await Application.findById(req.params.id);
+    
+    if (!application) {
+      return res.status(404).json({ error: 'Başvuru bulunamadı' });
+    }
+
+    if (application.status !== 'pending') {
+      return res.status(400).json({ 
+        error: 'Bu başvuru zaten işleme alınmış' 
+      });
+    }
+
+    application.status = 'rejected';
+    application.rejectedAt = new Date();
+    application.rejectionReason = reason || 'Başvurunuz uygun görülmemiştir';
+    await application.save();
+
+    res.json({
+      message: 'Başvuru reddedildi'
+    });
+
+  } catch (error) {
+    console.error('Başvuru reddetme hatası:', error);
+    res.status(500).json({ error: 'Başvuru reddedilemedi' });
+  }
+});
+
+
+
+
 app.get('/', (req, res) => {
   res.json({ message: 'Telegram Profile API çalışıyor! 🚀' });
 });
