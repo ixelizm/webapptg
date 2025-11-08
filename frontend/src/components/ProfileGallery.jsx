@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus } from 'lucide-react';
-
+import ApplicationForm from './ApplicationForm';
 const API_URL = 'https://webapptg-production.up.railway.app/api';
 
 const ProfileGallery = ({ onAdminClick }) => {
@@ -11,6 +11,7 @@ const ProfileGallery = ({ onAdminClick }) => {
   const [filterAccountType, setFilterAccountType] = useState('all');
   const [filterVerified, setFilterVerified] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
   
   const gridColumns = 3;
 
@@ -65,6 +66,11 @@ const ProfileGallery = ({ onAdminClick }) => {
     }
   };
 
+  // Eğer ApplicationForm gösterilecekse, onu render et
+  if (showApplicationForm) {
+    return <ApplicationForm onBack={() => setShowApplicationForm(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black p-4 pb-20">
       <div className="max-w-4xl mx-auto">
@@ -73,7 +79,7 @@ const ProfileGallery = ({ onAdminClick }) => {
             Profil Galerisi
           </h1>
           <button
-            onClick={onAdminClick}
+            onClick={() => setShowApplicationForm(true)}
             className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
           >
             <UserPlus className="w-5 h-5" />
