@@ -266,20 +266,21 @@ app.post('/api/upload', upload.array('images', 10), async (req, res) => {
 app.get('/api/profiles', async (req, res) => {
   try {
     const { accountType, verified } = req.query;
-    
-    let filter = {};
+
+    let match = {};
     if (accountType && accountType !== 'all') {
-      filter.accountType = accountType;
+      match.accountType = accountType;
     }
     if (verified && verified !== 'all') {
-      filter.verified = verified === 'verified';
+      match.verified = verified === 'verified';
     }
-    
-    // 30 adet profile alıyoruz
-    const profiles = await Profile.find(filter)
-      .sort({ createdAt: -1 })
-      .limit(30);
-      
+
+    // Aggregation ile rastgele 30 kayıt çek
+    const profiles = await Profile.aggregate([
+      { $match: match },
+      { $sample: { size: 30 } } // Rastgele 30
+    ]);
+
     res.json(profiles);
   } catch (error) {
     res.status(500).json({ message: error.message });
