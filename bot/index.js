@@ -93,7 +93,7 @@ Kurallara uymayan kullanıcılar veya modeller *sistem tarafından kalıcı olar
 
 📍 *Bilgi Talebi*  
 1️⃣ *Telefon numaranız* – Size uygun modellerle hızlı iletişim için.  
-2️⃣ *Konumunuz* – En yakın (25 KM'ye kadar) aktif model profillerini göstermek için.  
+2️⃣ *Konumunuz* – En yakın (20 KM'ye kadar) aktif model profillerini göstermek için.  
 ⚠️ *Bilgileriniz sistemden çıktıktan sonra silinecektir*.
 `;
 

@@ -102,7 +102,7 @@ const ProfileGallery = ({ onAdminClick }) => {
   };
 
   const handleShare = () => {
-    window.open('https://t.me/share/url?url=https://t.me/ixelatorbot', '_blank');
+    window.open('https://t.me/share/url?url=https://t.me/bossovipbot', '_blank');
   };
 
   // Eğer ApplicationForm gösterilecekse, onu render et
