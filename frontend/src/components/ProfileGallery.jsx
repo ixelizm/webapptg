@@ -136,7 +136,6 @@ const handleShare = () => {
               <span className="font-semibold">Model Başvurusu</span>
             </button>
           </div>
-        
         </div>
         
         <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
