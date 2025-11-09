@@ -137,7 +137,7 @@ const ProfileGallery = ({ onAdminClick }) => {
         <div className="text-center mb-4">
   <p className="text-sm font-semibold animate-pulse">
     <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 animate-pulse">
-      ⭐ Bizi 3 arkadaşınız ile paylaşarak SINIRSIZ olan profillere erişebilirsin!iz ⭐
+      ⭐ Bizi 3 arkadaşınız ile paylaşarak SINIRSIZ VIP olan profillere erişebilirsiniz! ⭐
     </span>
   </p>
 </div>
