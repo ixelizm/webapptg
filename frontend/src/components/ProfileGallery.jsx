@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus } from 'lucide-react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus, Share2 } from 'lucide-react';
 import ApplicationForm from './ApplicationForm';
 const API_URL = 'https://webapptg-production.up.railway.app/api';
 
@@ -56,7 +56,7 @@ const ProfileGallery = ({ onAdminClick }) => {
       const shuffled = [...data].sort(() => Math.random() - 0.5);
       const selected = shuffled.slice(0, Math.min(randomCount, data.length));
       
-      // Her profil için 6-20 km arası rastgele küsuratlı mesafe oluştur
+      // Her profil için 6-19 km arası rastgele küsuratlı mesafe oluştur
       const distances = {};
       selected.forEach(profile => {
         const randomDistance = (Math.random() * (19 - 6) + 6).toFixed(1);
@@ -72,14 +72,7 @@ const ProfileGallery = ({ onAdminClick }) => {
       setLoading(false);
     }
   };
-const handleShare = () => {
-    window.open('https://t.me/share/url?url=https://t.me/ixelatorbot', '_blank');
-  };
 
-  // Eğer ApplicationForm gösterilecekse, onu render et
-  if (showApplicationForm) {
-    return <ApplicationForm onBackClick={() => setShowApplicationForm(false)} />;
-  }
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
     setCurrentImageIndex(0);
@@ -106,6 +99,10 @@ const handleShare = () => {
         prev === 0 ? selectedProfile.images.length - 1 : prev - 1
       );
     }
+  };
+
+  const handleShare = () => {
+    window.open('https://t.me/share/url?url=https://t.me/ixelatorbot', '_blank');
   };
 
   // Eğer ApplicationForm gösterilecekse, onu render et
@@ -165,21 +162,21 @@ const handleShare = () => {
           </div>
         </div>
 
-<div className="text-center mb-4">
-  <span className="text-purple-300 text-sm flex items-center justify-center gap-2">
-    {loading ? (
-      'Yükleniyor...'
-    ) : (
-      <>
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </span>
-        <span>Aktif • {profiles.length} profil gösteriliyor</span>
-      </>
-    )}
-  </span>
-</div>
+        <div className="text-center mb-4">
+          <span className="text-purple-300 text-sm flex items-center justify-center gap-2">
+            {loading ? (
+              'Yükleniyor...'
+            ) : (
+              <>
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span>Aktif • {profiles.length} profil gösteriliyor</span>
+              </>
+            )}
+          </span>
+        </div>
         
         {loading ? (
           <div className="text-center py-12">
