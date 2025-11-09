@@ -49,45 +49,70 @@ console.log('🤖 Bot başlatıldı...');
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
   const user = msg.from;
-  
+
   try {
     // Kullanıcının zaten kayıtlı olup olmadığını kontrol et
     const existingUser = await TelegramUser.findOne({ telegramId: user.id.toString() });
-    
+
     if (existingUser) {
-      bot.sendMessage(chatId, 
+      bot.sendMessage(chatId,
         `✅ Hoş geldiniz ${user.first_name}!\n\n` +
         'Zaten kayıtlısınız. Web uygulamasını kullanabilirsiniz.',
         {
           reply_markup: {
             inline_keyboard: [[
-              { text: '🌐 Profil Galerisini Aç', web_app: { url: WEB_APP_URL } }
+              { text: '🌐 BossO | VIP Sayfasını Aç', web_app: { url: WEB_APP_URL } }
+            ],
+          [
+              { text: '📍 BossO | Destek', callback_data: "test"}
             ]]
           }
         }
       );
       return;
     }
-    
+
     // Yeni kullanıcı için kayıt başlat
-    bot.sendMessage(chatId, 
-      `Merhaba ${user.first_name}! 👋\n\n` +
-      '🎨 *Profil Galerisi*\'ne hoş geldiniz!\n\n' +
-      'Profilleri görüntülemek için lütfen aşağıdaki bilgileri paylaşın:\n\n' +
-      '1️⃣ Telefon numaranız\n' +
-      '2️⃣ Konumunuz\n\n' +
-      '⚠️ Bilgileriniz güvenli bir şekilde saklanacaktır.',
-      {
-        parse_mode: 'Markdown',
-        reply_markup: {
-          keyboard: [
-            [{ text: '📱 Telefon Numaramı Paylaş', request_contact: true }]
-          ],
-          resize_keyboard: true,
-          one_time_keyboard: false
-        }
+const welcomeText = `Merhaba ${user.first_name}! 👋
+
+🎨 *BossO | VIP*'ye hoş geldiniz!
+
+⚠️ *UYARI: DOLANDIRICILIK VE SAHTEKARLIK YASAKTIR*  
+Sayfadaki modellerin *görüşme öncesi ödeme alma yetkisi yoktur* 💳❌
+
+🔹 *Önemli Kurallar*  
+- *Elden ödeme dışında ödeme talep eden profilleri bildiriniz*.  
+- *Onaylı profillerde, onaylanan kişi dışında bir başkasının gelmesi durumunda bildiriniz*.
+
+📝 *Model Başvuruları*  
+- *"Model Başvuru"* butonuna basarak profil oluşturabilirsiniz.  
+- Profilleri *onaylı hale getirmek için kimlik doğrulaması zorunludur*.
+
+⚖️ *Cezai İşlem*  
+Kurallara uymayan kullanıcılar veya modeller *sistem tarafından kalıcı olarak yasaklanır* ❌
+
+📍 *Bilgi Talebi*  
+1️⃣ *Telefon numaranız* – Size uygun modellerle hızlı iletişim için.  
+2️⃣ *Konumunuz* – En yakın (25 KM'ye kadar) aktif model profillerini göstermek için.  
+⚠️ *Bilgileriniz sistemden çıktıktan sonra silinecektir*.
+`;
+
+
+    // Fotoğraf gönderme
+    bot.sendPhoto(chatId, "logo.jpg", {
+      caption: welcomeText,
+      parse_mode: 'Markdown',
+      reply_markup: {
+        keyboard: [
+          [{ text: '📱 Telefon Numaramı Paylaş', request_contact: true }]
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true
       }
-    );
+    });
+
+
+
   } catch (error) {
     console.error('Start komut hatası:', error);
     bot.sendMessage(chatId, '❌ Bir hata oluştu. Lütfen tekrar deneyin.');
@@ -99,7 +124,7 @@ bot.on('contact', async (msg) => {
   const chatId = msg.chat.id;
   const contact = msg.contact;
   const user = msg.from;
-  
+
   // Sadece kendi numarasını paylaşmışsa kabul et
   if (contact.user_id !== user.id) {
     bot.sendMessage(chatId, '⚠️ Lütfen kendi telefon numaranızı paylaşın.', {
@@ -112,17 +137,17 @@ bot.on('contact', async (msg) => {
     });
     return;
   }
-  
+
   // Telefon numarasını session'a kaydet
-  userSessions[chatId] = { 
+  userSessions[chatId] = {
     phone: contact.phone_number,
     userId: user.id,
     username: user.username || '',
     firstName: user.first_name,
     lastName: user.last_name || ''
   };
-  
-  bot.sendMessage(chatId, 
+
+  bot.sendMessage(chatId,
     '✅ Telefon numaranız alındı!\n\n' +
     'Şimdi lütfen *konumunuzu* paylaşın.',
     {
@@ -142,18 +167,18 @@ bot.on('contact', async (msg) => {
 bot.on('location', async (msg) => {
   const chatId = msg.chat.id;
   const location = msg.location;
-  
+
   if (!userSessions[chatId]) {
-    bot.sendMessage(chatId, 
+    bot.sendMessage(chatId,
       '⚠️ Lütfen önce telefon numaranızı paylaşın.\n\n' +
       'Kayıt işlemine başlamak için /start komutunu kullanın.'
     );
     return;
   }
-  
+
   try {
     const session = userSessions[chatId];
-    
+
     // Kullanıcıyı veritabanına kaydet
     const newUser = new TelegramUser({
       telegramId: session.userId.toString(),
@@ -166,9 +191,9 @@ bot.on('location', async (msg) => {
         longitude: location.longitude
       }
     });
-    
+
     await newUser.save();
-    
+
     // API'ye de kaydet (Railway backend)
     try {
       await fetch(`${API_URL}/telegram-users`, {
@@ -189,11 +214,11 @@ bot.on('location', async (msg) => {
     } catch (apiError) {
       console.error('API kayıt hatası:', apiError);
     }
-    
+
     // Session'ı temizle
     delete userSessions[chatId];
-    
-    bot.sendMessage(chatId, 
+
+    bot.sendMessage(chatId,
       '🎉 *Kayıt işleminiz tamamlandı!*\n\n' +
       '✅ Telefon numarası kaydedildi\n' +
       '✅ Konum bilgisi kaydedildi\n\n' +
@@ -208,14 +233,14 @@ bot.on('location', async (msg) => {
         }
       }
     );
-    
+
     console.log(`✅ Yeni kullanıcı kaydedildi: ${session.firstName} (${session.userId})`);
-    
+
   } catch (error) {
     console.error('Kayıt hatası:', error);
-    
+
     if (error.code === 11000) {
-      bot.sendMessage(chatId, 
+      bot.sendMessage(chatId,
         '⚠️ Bu hesap zaten kayıtlı.\n\n' +
         'Direkt olarak web uygulamasını kullanabilirsiniz.',
         {
@@ -227,12 +252,12 @@ bot.on('location', async (msg) => {
         }
       );
     } else {
-      bot.sendMessage(chatId, 
+      bot.sendMessage(chatId,
         '❌ Kayıt sırasında bir hata oluştu.\n\n' +
         'Lütfen /start komutu ile tekrar deneyin.'
       );
     }
-    
+
     delete userSessions[chatId];
   }
 });
@@ -241,10 +266,10 @@ bot.on('location', async (msg) => {
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
   const messageType = msg.text || msg.caption || '';
-  
+
   // Komut veya özel mesaj değilse
   if (!messageType.startsWith('/') && !msg.contact && !msg.location) {
-    bot.sendMessage(chatId, 
+    bot.sendMessage(chatId,
       '👋 Merhaba!\n\n' +
       'Kayıt olmak için /start komutunu kullanın.\n' +
       'Profil galerisini görüntülemek için kayıt olmanız gerekmektedir.',
@@ -262,7 +287,7 @@ bot.on('message', (msg) => {
 // Inline button callback
 bot.on('callback_query', async (query) => {
   const chatId = query.message.chat.id;
-  
+
   if (query.data === 'start_registration') {
     bot.answerCallbackQuery(query.id);
     bot.sendMessage(chatId, '/start');
