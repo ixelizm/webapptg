@@ -120,46 +120,42 @@ const ProfileGallery = ({ onAdminClick }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleShare}
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-1.5 rounded-lg hover:shadow-lg transition-all flex items-center gap-1.5 text-sm"
             >
-              <Share2 className="w-5 h-5" />
-              <span className="font-semibold">Bizi Paylaş</span>
+              <Share2 className="w-4 h-4" />
+              <span className="font-medium">Paylaş</span>
             </button>
             <button
               onClick={() => setShowApplicationForm(true)}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1.5 rounded-lg hover:shadow-lg transition-all flex items-center gap-1.5 text-sm"
             >
-              <UserPlus className="w-5 h-5" />
-              <span className="font-semibold">Model Başvurusu</span>
+              <UserPlus className="w-4 h-4" />
+              <span className="font-medium">Başvuru</span>
             </button>
           </div>
         </div>
         
-        <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-purple-400" />
-            <select
-              value={filterAccountType}
-              onChange={(e) => setFilterAccountType(e.target.value)}
-              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
-            >
-              <option value="all">Tüm Hesap Türleri</option>
-              <option value="bireysel">Bireysel</option>
-              <option value="ajans">Ajans</option>
-            </select>
-          </div>
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <Filter className="w-5 h-5 text-purple-400" />
+          <select
+            value={filterAccountType}
+            onChange={(e) => setFilterAccountType(e.target.value)}
+            className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-3 py-2 focus:outline-none focus:border-pink-500 cursor-pointer text-sm"
+          >
+            <option value="all">Tüm Hesap Türleri</option>
+            <option value="bireysel">Bireysel</option>
+            <option value="ajans">Ajans</option>
+          </select>
 
-          <div className="flex items-center gap-2">
-            <select
-              value={filterVerified}
-              onChange={(e) => setFilterVerified(e.target.value)}
-              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
-            >
-              <option value="all">Tüm Onay Durumları</option>
-              <option value="verified">Onaylı</option>
-              <option value="unverified">Onaysız</option>
-            </select>
-          </div>
+          <select
+            value={filterVerified}
+            onChange={(e) => setFilterVerified(e.target.value)}
+            className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-3 py-2 focus:outline-none focus:border-pink-500 cursor-pointer text-sm"
+          >
+            <option value="all">Tüm Onay Durumları</option>
+            <option value="verified">Onaylı</option>
+            <option value="unverified">Onaysız</option>
+          </select>
         </div>
 
         <div className="text-center mb-4">
