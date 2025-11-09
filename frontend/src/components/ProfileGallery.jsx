@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus } from 'lucide-react';
+import { X, Calendar, MapPin, ChevronLeft, ChevronRight, MessageCircle, BadgeCheck, User, Building2, Filter, UserPlus, Share2 } from 'lucide-react';
 import ApplicationForm from './ApplicationForm';
 const API_URL = 'https://webapptg-production.up.railway.app/api';
 
@@ -50,7 +50,7 @@ const ProfileGallery = ({ onAdminClick }) => {
       const data = await response.json();
       
       // 15-23 arası rastgele sayı seç
-      const randomCount = Math.floor(Math.random() * (23 - 15 + 1)) + 15;
+      const randomCount = Math.floor(Math.random() * (19 - 5 + 1)) + 5;
       
       // Profilleri karıştır ve rastgele sayı kadar seç
       const shuffled = [...data].sort(() => Math.random() - 0.5);
@@ -101,6 +101,10 @@ const ProfileGallery = ({ onAdminClick }) => {
     }
   };
 
+  const handleShare = () => {
+    window.open('https://t.me/share/url?url=https://t.me/ixelatorbot', '_blank');
+  };
+
   // Eğer ApplicationForm gösterilecekse, onu render et
   if (showApplicationForm) {
     return <ApplicationForm onBackClick={() => setShowApplicationForm(false)} />;
@@ -113,13 +117,22 @@ const ProfileGallery = ({ onAdminClick }) => {
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-red-400">
             BossO | VIP
           </h1>
-          <button
-            onClick={() => setShowApplicationForm(true)}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
-          >
-            <UserPlus className="w-5 h-5" />
-            <span className="font-semibold">Model Başvurusu</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleShare}
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
+            >
+              <Share2 className="w-5 h-5" />
+              <span className="font-semibold">Bizi Paylaş</span>
+            </button>
+            <button
+              onClick={() => setShowApplicationForm(true)}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
+            >
+              <UserPlus className="w-5 h-5" />
+              <span className="font-semibold">Model Başvurusu</span>
+            </button>
+          </div>
         </div>
         
         <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
@@ -149,21 +162,21 @@ const ProfileGallery = ({ onAdminClick }) => {
           </div>
         </div>
 
-<div className="text-center mb-4">
-  <span className="text-purple-300 text-sm flex items-center justify-center gap-2">
-    {loading ? (
-      'Yükleniyor...'
-    ) : (
-      <>
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </span>
-        <span>Aktif • {profiles.length} profil gösteriliyor</span>
-      </>
-    )}
-  </span>
-</div>
+        <div className="text-center mb-4">
+          <span className="text-purple-300 text-sm flex items-center justify-center gap-2">
+            {loading ? (
+              'Yükleniyor...'
+            ) : (
+              <>
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span>Aktif • {profiles.length} profil gösteriliyor</span>
+              </>
+            )}
+          </span>
+        </div>
         
         {loading ? (
           <div className="text-center py-12">

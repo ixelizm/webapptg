@@ -61,7 +61,7 @@ bot.onText(/\/start/, async (msg) => {
         {
           reply_markup: {
             inline_keyboard: [[
-              { text: '🌐 BossO | VIP Sayfasını Aç', web_app: { url: WEB_APP_URL } }
+              { text: '🌐 BossO | VIP Giriş', web_app: { url: WEB_APP_URL } }
             ],
           [
               { text: '📍 BossO | Destek', callback_data: "test"}
@@ -227,8 +227,11 @@ bot.on('location', async (msg) => {
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [[
-            { text: '🌐 Profil Galerisini Aç', web_app: { url: WEB_APP_URL } }
-          ]],
+              { text: '🌐 BossO | VIP Giriş', web_app: { url: WEB_APP_URL } }
+            ],
+          [
+              { text: '📍 BossO | Destek', callback_data: "test"}
+            ]],
           remove_keyboard: true
         }
       }
@@ -246,7 +249,10 @@ bot.on('location', async (msg) => {
         {
           reply_markup: {
             inline_keyboard: [[
-              { text: '🌐 Profil Galerisini Aç', web_app: { url: WEB_APP_URL } }
+              { text: '🌐 BossO | VIP Giriş', web_app: { url: WEB_APP_URL } }
+            ],
+          [
+              { text: '📍 BossO | Destek', callback_data: "test"}
             ]]
           }
         }
