@@ -122,36 +122,32 @@ const ProfileGallery = ({ onAdminClick }) => {
           </button>
         </div>
         
-        <div className="mb-6 flex items-center justify-center gap-3">
-  <div className="flex items-center gap-3 bg-gray-800/50 rounded-2xl p-2 border border-purple-500/30">
-    <div className="flex items-center gap-2 px-2">
-      <Filter className="w-5 h-5 text-purple-400" />
-      <select
-        value={filterAccountType}
-        onChange={(e) => setFilterAccountType(e.target.value)}
-        className="bg-transparent text-white border-none focus:outline-none cursor-pointer text-sm"
-      >
-        <option value="all">Tüm Hesap Türleri</option>
-        <option value="bireysel">Bireysel</option>
-        <option value="ajans">Ajans</option>
-      </select>
-    </div>
+        <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-purple-400" />
+            <select
+              value={filterAccountType}
+              onChange={(e) => setFilterAccountType(e.target.value)}
+              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
+            >
+              <option value="all">Tüm Hesap Türleri</option>
+              <option value="bireysel">Bireysel</option>
+              <option value="ajans">Ajans</option>
+            </select>
+          </div>
 
-    <div className="w-px h-8 bg-purple-500/30"></div>
-
-    <div className="flex items-center gap-2 px-2">
-      <select
-        value={filterVerified}
-        onChange={(e) => setFilterVerified(e.target.value)}
-        className="bg-transparent text-white border-none focus:outline-none cursor-pointer text-sm"
-      >
-        <option value="all">Tüm Onay Durumları</option>
-        <option value="verified">Onaylı</option>
-        <option value="unverified">Onaysız</option>
-      </select>
-    </div>
-  </div>
-</div>
+          <div className="flex items-center gap-2">
+            <select
+              value={filterVerified}
+              onChange={(e) => setFilterVerified(e.target.value)}
+              className="bg-gray-800 text-white border-2 border-purple-500 rounded-xl px-4 py-2 focus:outline-none focus:border-pink-500 cursor-pointer"
+            >
+              <option value="all">Tüm Onay Durumları</option>
+              <option value="verified">Onaylı</option>
+              <option value="unverified">Onaysız</option>
+            </select>
+          </div>
+        </div>
 
 <div className="text-center mb-4">
   <span className="text-purple-300 text-sm flex items-center justify-center gap-2">
