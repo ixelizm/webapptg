@@ -134,7 +134,13 @@ const ProfileGallery = ({ onAdminClick }) => {
             </button>
           </div>
         </div>
-        
+        <div className="text-center mb-4">
+  <p className="text-sm font-semibold animate-pulse">
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 animate-pulse">
+      ⭐ Bizi paylaşarak VIP Ayrıcalıklara erişebilirsin! ⭐
+    </span>
+  </p>
+</div>
         <div className="mb-6 flex items-center justify-center gap-3">
           <Filter className="w-5 h-5 text-purple-400" />
           <select
